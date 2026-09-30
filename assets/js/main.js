@@ -164,6 +164,18 @@ document.addEventListener('DOMContentLoaded', function () {
       return 530;
     }
 
+    // расстояние (км, из select) → стоимость доставки за 1 тонну (₽/т)
+    // ставка убывает с расстоянием, но итоговая цена за тонну растёт вместе с километражем
+    var DISTANCE_PRICE_PER_TON = {
+      5: 180, 10: 200, 20: 220, 30: 270, 40: 320,
+      50: 400, 60: 480, 70: 525, 80: 600, 90: 630, 100: 650
+    };
+    function deliveryPricePerTon(km) {
+      if (!km || km <= 0) return 0;
+      if (DISTANCE_PRICE_PER_TON[km] != null) return DISTANCE_PRICE_PER_TON[km];
+      return km * 6; // свыше 100 км — 6 ₽/т/км
+    }
+
     function syncFractionField() {
       var materialName = calcMaterial.options[calcMaterial.selectedIndex].text;
       var groups = MATERIALS[materialName];
@@ -197,7 +209,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var calcPriceBox = document.getElementById('calcPriceBox');
     var calcPriceValue = document.getElementById('calcPriceValue');
+    var calcPriceNote = document.getElementById('calcPriceNote');
+    var calcDistance = document.getElementById('calcDistance');
+    var calcDistanceCustomField = document.getElementById('calcDistanceCustomField');
+    var calcDistanceCustom = document.getElementById('calcDistanceCustom');
     var rub = new Intl.NumberFormat('ru-RU');
+
+    function currentDistanceKm() {
+      if (calcDistance.value === 'custom') {
+        var n = parseNum(calcDistanceCustom.value);
+        return isNaN(n) ? 0 : n;
+      }
+      return parseNum(calcDistance.value) || 0;
+    }
 
     function updatePrice() {
       var tons = parseNum(calcTons.value);
@@ -210,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (priceRaw === 'request') {
         calcPriceValue.textContent = 'Цена по запросу — уточните у менеджера';
+        calcPriceNote.textContent = 'Ориентировочная стоимость материала по прайс-листу.';
         calcPriceBox.hidden = false;
         return;
       }
@@ -219,7 +244,15 @@ document.addEventListener('DOMContentLoaded', function () {
         calcPriceBox.hidden = true;
         return;
       }
-      calcPriceValue.textContent = '≈ ' + rub.format(Math.round(tons * perTon)) + ' ₽';
+
+      var km = currentDistanceKm();
+      var deliveryPerTon = deliveryPricePerTon(km);
+      var total = (perTon + deliveryPerTon) * tons;
+
+      calcPriceValue.textContent = '≈ ' + rub.format(Math.round(total)) + ' ₽';
+      calcPriceNote.textContent = deliveryPerTon > 0
+        ? 'Ориентировочная стоимость материала по прайс-листу с учётом доставки.'
+        : 'Ориентировочная стоимость материала по прайс-листу.';
       calcPriceBox.hidden = false;
     }
 
@@ -234,6 +267,11 @@ document.addEventListener('DOMContentLoaded', function () {
       updatePrice();
     });
     calcFraction.addEventListener('change', updatePrice);
+    calcDistance.addEventListener('change', function () {
+      calcDistanceCustomField.hidden = calcDistance.value !== 'custom';
+      updatePrice();
+    });
+    calcDistanceCustom.addEventListener('input', updatePrice);
     calcMaterial.addEventListener('change', function () {
       syncFractionField();
       if (calcTons.value) calcTons.dispatchEvent(new Event('input'));
@@ -265,6 +303,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       var materialName = calcMaterial.options[calcMaterial.selectedIndex].text;
       var fractionName = calcFractionField.hidden ? '—' : calcFraction.value;
+      var km = currentDistanceKm();
+      var distanceLabel = km > 0 ? (rub.format(km) + ' км') : '—';
 
       sendLead({
         'Имя': name.value.trim(),
@@ -274,13 +314,19 @@ document.addEventListener('DOMContentLoaded', function () {
         'Фракция / марка': fractionName,
         'Вес, тн': calcTons.value || '—',
         'Объём, м3': calcCubes.value || '—',
-        'Ориентировочная стоимость (без доставки)': calcPriceBox.hidden ? '—' : calcPriceValue.textContent,
+        'Расстояние до объекта': distanceLabel,
+        'Ориентировочная стоимость': calcPriceBox.hidden ? '—' : calcPriceValue.textContent,
         'Адрес доставки': document.getElementById('calcAddress').value.trim() || '—'
       }, {
         subject: 'Заявка с калькулятора — ' + name.value.trim(),
         statusEl: calcStatus,
         submitBtn: calcSubmitBtn,
-        onDone: function () { calcForm.reset(); syncFractionField(); calcPriceBox.hidden = true; }
+        onDone: function () {
+          calcForm.reset();
+          syncFractionField();
+          calcDistanceCustomField.hidden = true;
+          calcPriceBox.hidden = true;
+        }
       });
     });
   }

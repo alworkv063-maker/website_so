@@ -346,11 +346,41 @@
               </div>
             </div>
 
+            <div class="field-row">
+              <div class="field">
+                <label>Расстояние до объекта</label>
+                <select id="calcDistance">
+                  <option value="0" selected>Не указано</option>
+                  <option value="5">5 км</option>
+                  <option value="10">10 км</option>
+                  <option value="20">20 км</option>
+                  <option value="30">30 км</option>
+                  <option value="40">40 км</option>
+                  <option value="50">50 км</option>
+                  <option value="60">60 км</option>
+                  <option value="70">70 км</option>
+                  <option value="80">80 км</option>
+                  <option value="90">90 км</option>
+                  <option value="100">100 км</option>
+                  <option value="custom">Свыше 100 км</option>
+                </select>
+              </div>
+              <div class="field field-suffix" id="calcDistanceCustomField" hidden>
+                <label>Точное расстояние</label>
+                <input
+                  type="text"
+                  id="calcDistanceCustom"
+                  inputmode="decimal"
+                  placeholder="0"
+                />
+                <span>км</span>
+              </div>
+            </div>
+
             <div class="calc-price" id="calcPriceBox" hidden>
               <div class="calc-price__value" id="calcPriceValue"></div>
-              <p class="calc-price__note">
-                Ориентировочная стоимость материала по прайс-листу, без
-                учёта доставки.
+              <p class="calc-price__note" id="calcPriceNote">
+                Ориентировочная стоимость материала по прайс-листу.
               </p>
             </div>
 
