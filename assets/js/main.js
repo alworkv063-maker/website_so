@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       var km = currentDistanceKm();
-      var deliveryPerTon = deliveryPricePerTon(km);
+      var deliveryPerTon = tons >= 30 ? deliveryPricePerTon(km) : 0;
       var total = (perTon + deliveryPerTon) * tons;
 
       calcPriceValue.textContent = '≈ ' + rub.format(Math.round(total)) + ' ₽';
