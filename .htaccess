@@ -1,0 +1,35 @@
+# Перенаправления со старых адресов (MODX) на новые страницы.
+# Нужны, чтобы сохранить позиции в поиске и рабочие внешние ссылки.
+# Порядок важен: первое совпавшее правило срабатывает, частные случаи идут выше общих.
+
+# Главная и служебные страницы
+RedirectMatch 301 ^/kontaktyi/soobshhenie-otpravleno\.html$ /
+RedirectMatch 301 ^/oshibka-404\.html$ /
+RedirectMatch 301 ^/poisk-po-sajtu\.html$ /
+
+# Контакты, о компании, партнёры
+RedirectMatch 301 ^/kontaktyi/?$ /index.html#contacts
+RedirectMatch 301 ^/o-kompanii\.html$ /index.html#about
+RedirectMatch 301 ^/nashi-partneryi(/.*|\.html)?$ /index.html#about
+
+# Акции (на новом сайте раздела нет)
+RedirectMatch 301 ^/akczii(/.*)?$ /
+
+# Продукция (частные страницы выше общего раздела)
+RedirectMatch 301 ^/produkcziya/shheben/?$ /shcheben.html
+RedirectMatch 301 ^/produkcziya/pesok/?$ /pesok.html
+RedirectMatch 301 ^/produkcziya/gpshhs/?$ /otsev.html
+RedirectMatch 301 ^/produkcziya/pasporta-na-produkcziyu/?$ /documents.html
+RedirectMatch 301 ^/produkcziya/?$ /index.html#catalog
+
+# Прайс-лист и доставка
+RedirectMatch 301 ^/prajs-list/prajs-list-pri-otgruzke-na-vodnyij-transport\.html$ /prices.html
+RedirectMatch 301 ^/prajs-list\.html$ /prices.html
+RedirectMatch 301 ^/dostavka\.html$ /delivery.html
+
+# Заказ и обратный звонок: форма на главной
+RedirectMatch 301 ^/oformit-zakaz\.html$ /index.html#calc
+RedirectMatch 301 ^/zakazat-zvonok\.html$ /index.html#calc
+
+# Статьи
+RedirectMatch 301 ^/stati(/.*)?$ /blog.html
