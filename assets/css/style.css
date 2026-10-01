@@ -401,9 +401,9 @@ a.hero__tag:focus-visible {
   font-family: var(--font-head); font-weight: 800;
   padding: 10px 16px; border-radius: 8px; font-size: 14px;
 }
-.about ul.checks { margin-top: 24px; display: grid; gap: 12px; }
-.about ul.checks li { display: flex; gap: 10px; font-size: 14.5px; }
-.about ul.checks svg { flex-shrink: 0; width: 20px; height: 20px; color: var(--accent-2); margin-top: 1px; }
+ul.checks { margin-top: 24px; display: grid; gap: 12px; list-style: none; padding: 0; }
+ul.checks li { display: flex; gap: 10px; font-size: 14.5px; }
+ul.checks svg { flex-shrink: 0; width: 20px; height: 20px; color: var(--accent-2); margin-top: 1px; }
 .about p.desc { color: var(--muted); margin: 18px 0 6px; font-size: 15px; }
 
 /* ===== Услуги / полосы ===== */
@@ -546,6 +546,7 @@ a.hero__tag:focus-visible {
 .article-body p { font-size: 15.5px; line-height: 1.7; color: var(--ink); margin-bottom: 16px; }
 .article-body ul, .article-body ol { margin: 0 0 20px; padding-left: 22px; }
 .article-body li { font-size: 15.5px; line-height: 1.65; color: var(--ink); margin-bottom: 8px; }
+.article-body ul.checks { padding-left: 0; list-style: none; }
 .article-body table { width: 100%; border-collapse: collapse; margin: 10px 0 24px; font-size: 14.5px; }
 .article-body th, .article-body td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); }
 .article-body th { font-family: var(--font-head); font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
