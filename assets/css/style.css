@@ -752,6 +752,7 @@ ul.checks svg { flex-shrink: 0; width: 20px; height: 20px; color: var(--accent-2
 
 .photo-banner {
   position: relative;
+  margin: 0 0 24px;
   border-radius: 10px;
   overflow: hidden;
   aspect-ratio: 21/8;
